@@ -129,6 +129,9 @@ require 'includes/form_handlers/login_handler.php';
 
         </div>
     </div>
+    
+    <script src="assets/js/script.js"></script>
+
     <script>
         const landingPage = document.querySelector('.landing');
         const landingBtn = document.querySelector('#landing-btn');
