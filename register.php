@@ -11,7 +11,7 @@ require 'includes/form_handlers/login_handler.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>classRoom</title>
+    <title>School4All</title>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
@@ -42,7 +42,7 @@ require 'includes/form_handlers/login_handler.php';
             <h1 class="brand">classRoom</h1>
             <div class="landing__bg"></div>
             <div class="content">
-                <h1>Join Your Class From Anywhere Anytime</h1>
+                <h1>Rejoindre votre salle de classe</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae blanditiis atque perferendis suscipit,
                     quae quibusdam consequuntur magni voluptatibus quidem rerum?</p>
                 <span id="landing-btn">Login/SignUp</span>
@@ -50,8 +50,8 @@ require 'includes/form_handlers/login_handler.php';
         </div>
         <div class="login_box">
             <div class="login_header">
-                <h1>classRoom!</h1>
-                Loing in or sign up below!
+                <h1>School For All</h1>
+                Connexion ou inscription
             </div>
 
             <div id="first">
@@ -67,9 +67,9 @@ require 'includes/form_handlers/login_handler.php';
                     <br>
                     <?php if (in_array("Email or password was incorrect<br>", $error_array)) echo "<span style='color:red; font-size:0.78rem;'>Email or password was incorrect<br><br></span>"; ?>
 
-                    <input type="submit" name="login_button" id="button" value="Login">
+                    <input type="submit" name="login_button" id="button" value="Se connecter">
                     <br>
-                    <a href="#" id="signup" class="signup">Need an account? Register here!</a>
+                    <a href="#" id="signup" class="signup">Besoin d'un compte ? Enregistrez vous!</a>
 
                 </form>
 
@@ -152,6 +152,66 @@ require 'includes/form_handlers/login_handler.php';
             });
 
         });
+
+        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+        var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+        var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+        var colors = [ 'aqua' , 'azure' , 'beige', 'bisque', 'black', 'blue', 'brown', 'chocolate', 'coral', 'crimson', 'cyan', 'fuchsia', 'ghostwhite', 'gold', 'goldenrod', 'gray', 'green', 'indigo', 'ivory', 'khaki', 'lavender', 'lime', 'linen', 'magenta', 'maroon', 'moccasin', 'navy', 'olive', 'orange', 'orchid', 'peru', 'pink', 'plum', 'purple', 'red', 'salmon', 'sienna', 'silver', 'snow', 'tan', 'teal', 'thistle', 'tomato', 'turquoise', 'violet', 'white', 'yellow'];
+        var grammar = '#JSGF V1.0; grammar colors; public <color> = ' + colors.join(' | ') + ' ;'
+
+        var recognition = new SpeechRecognition();
+        var speechRecognitionList = new SpeechGrammarList();
+        speechRecognitionList.addFromString(grammar, 1);
+        recognition.grammars = speechRecognitionList;
+        recognition.continuous = false;
+        recognition.lang = 'fr-FR';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        var diagnostic = document.querySelector('.output');
+        var bg = document.querySelector('html');
+        var hints = document.querySelector('.hints');
+
+        var colorHTML= '';
+        colors.forEach(function(v, i, a){
+        console.log(v, i);
+        colorHTML += '<span style="background-color:' + v + ';"> ' + v + ' </span>';
+        });
+        hints.innerHTML = 'Tap/click then say a color to change the background color of the app. Try ' + colorHTML + '.';
+
+        document.body.onclick = function() {
+        recognition.start();
+        console.log('Ready to receive a color command.');
+        }
+
+        recognition.onresult = function(event) {
+        // The SpeechRecognitionEvent results property returns a SpeechRecognitionResultList object
+        // The SpeechRecognitionResultList object contains SpeechRecognitionResult objects.
+        // It has a getter so it can be accessed like an array
+        // The first [0] returns the SpeechRecognitionResult at the last position.
+        // Each SpeechRecognitionResult object contains SpeechRecognitionAlternative objects that contain individual results.
+        // These also have getters so they can be accessed like arrays.
+        // The second [0] returns the SpeechRecognitionAlternative at position 0.
+        // We then return the transcript property of the SpeechRecognitionAlternative object
+        var color = event.results[0][0].transcript;
+        diagnostic.textContent = 'Result received: ' + color + '.';
+        bg.style.backgroundColor = color;
+        console.log('Confidence: ' + event.results[0][0].confidence);
+        }
+
+        recognition.onspeechend = function() {
+        recognition.stop();
+        }
+
+        recognition.onnomatch = function(event) {
+        //diagnostic.textContent = "I didn't recognise that color.";
+        }
+
+        recognition.onerror = function(event) {
+        //diagnostic.textContent = 'Error occurred in recognition: ' + event.error;
+        }
+
  
     </script>
 </body>

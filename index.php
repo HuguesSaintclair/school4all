@@ -16,14 +16,14 @@ $checkEnrolled = $post->checkEnrolledClass();
         <?php 
           if ($checkTeaching == true) {
                echo "<div class='teaching'>
-             <h3><span class='header'>Teaching</span></h3>";
+             <h3><span class='header'>Cours enseignés</span></h3>";
                $post->loadTeachingClasses();
                echo "</div>";
           }
 
           if ($checkEnrolled == true) {
                echo "<div class='enrolled'>
-             <h3><span class='header'>Enrolled</span></h3>";
+             <h3><span class='header'>Cours suivis</span></h3>";
                $post->loadEnrolledClasses();
                echo "</div>";
           }
