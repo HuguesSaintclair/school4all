@@ -4,7 +4,7 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 
 var synth = window.speechSynthesis;
 
-var inputForm = document.querySelector('form');
+var inputForm = document.querySelector('#login-form');
 var emailInput = document.querySelector('input[name="log_email"]');
 var passwordInput = document.querySelector('input[name="log_password"]');
 var allInput = [emailInput];

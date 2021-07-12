@@ -66,6 +66,7 @@ require 'includes/form_handlers/login_handler.php';
                     
                     <?php if (in_array("Email or password was incorrect<br>", $error_array)) echo "<span style='color:red; font-size:0.78rem;'>Pseudo incorrect !<br><br></span>"; ?>
 
+                    <input type="hidden" name="login_button" value="Se connecter">
                     <input type="submit" name="login_button" id="button" value="Se connecter">
                     <br>
                     <a href="#" id="signup" class="signup">Besoin d'un compte ? Enregistrez vous!</a>
