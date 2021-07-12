@@ -4,6 +4,7 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 
 var synth = window.speechSynthesis;
 
+var inputForm = document.querySelector('form');
 var emailInput = document.querySelector('input[name="log_email"]');
 var passwordInput = document.querySelector('input[name="log_password"]');
 var allInput = [emailInput];
@@ -14,6 +15,10 @@ var pitch = 1;
 var rate = 1;
 var indexTxt = 0;
 var voices = [];
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function testSpeech(textInput) {
   // To ensure case consistency while checking with the returned output text
@@ -42,14 +47,20 @@ function testSpeech(textInput) {
     console.log('Confidence: ' + event.results[0][0].confidence);
   }
 
-  recognition.onspeechend = function() {
+  recognition.onspeechend = async function() {
     recognition.stop();
+
+    await sleep(2500);
 
     indexTxt++;
     if (indexTxt < messageTxt.length) {
       speak();
+    } else {
+      inputForm.submit();
     }
-  }
+  
+    console.log('onspeechend: onspeechend');
+}
 
   recognition.onerror = function(event) {
     // textInput.value = 'Error occurred in recognition: ' + event.error;
@@ -94,13 +105,6 @@ function testSpeech(textInput) {
       console.log('SpeechRecognition.onstart');
   }
 }
-
-// emailInput.addEventListener('click', () => {
-//   testSpeech(emailInput);
-// });
-// passwordInput.addEventListener('click', () => {
-//   testSpeech(passwordInput);
-// });
 
 function populateVoiceList() {
   voices = synth.getVoices().sort(function (a, b) {
