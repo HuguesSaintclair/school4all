@@ -56,16 +56,15 @@ require 'includes/form_handlers/login_handler.php';
 
             <div id="first">
                 <form action="register.php" method="POST" id="login-form">
-                    <input type="email" name="log_email" placeholder="Email address" value="<?php 
+                    <input type="text" name="log_email" placeholder="Pseudo" value="<?php 
                                                                                             if (isset($_SESSION['log_email'])) {
                                                                                                 echo $_SESSION['log_email'];
                                                                                             }
                                                                                             ?>" required>
                     <br>
 
-                    <input type="password" name="log_password" placeholder="Password">
-                    <br>
-                    <?php if (in_array("Email or password was incorrect<br>", $error_array)) echo "<span style='color:red; font-size:0.78rem;'>Email or password was incorrect<br><br></span>"; ?>
+                    
+                    <?php if (in_array("Email or password was incorrect<br>", $error_array)) echo "<span style='color:red; font-size:0.78rem;'>Pseudo incorrect !<br><br></span>"; ?>
 
                     <input type="submit" name="login_button" id="button" value="Se connecter">
                     <br>
@@ -93,13 +92,13 @@ require 'includes/form_handlers/login_handler.php';
                                                                                         } ?>" required>
                     <br>
 
-                    <input type="email" name="reg_email" placeholder="Email" value="<?php 
+                    <input type="text" name="reg_email" placeholder="Pseudo" value="<?php 
                                                                                     if (isset($_SESSION['reg_email'])) {
                                                                                         echo $_SESSION['reg_email'];
                                                                                     } ?>" required>
                     <br>
 
-                    <input type="email" name="reg_email2" placeholder="Confirm email" value="<?php 
+                    <input type="text" name="reg_email2" placeholder="Confirmer Pseudo" value="<?php 
                                                                                                 if (isset($_SESSION['reg_email2'])) {
                                                                                                     echo $_SESSION['reg_email2'];
                                                                                                 } ?>" required>
