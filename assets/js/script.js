@@ -2,15 +2,26 @@ var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
 var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
+var synth = window.speechSynthesis;
+
 var emailInput = document.querySelector('input[name="log_email"]');
 var passwordInput = document.querySelector('input[name="log_password"]');
+var allInput = [emailInput];
+var messageTxt = ['Bienvenue sur le didacticiel pour tous. Veuillez donner votre pseudo'];
+var lang = 'fr-FR';
+
+var pitch = 1;
+var rate = 1;
+var indexTxt = 0;
+var voices = [];
 
 function testSpeech(textInput) {
   // To ensure case consistency while checking with the returned output text
   textInput.value = '';
 
   var recognition = new SpeechRecognition();
-  recognition.lang = 'en-US';
+  // recognition.lang = 'en-US';
+  recognition.lang = lang;
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
 
@@ -33,6 +44,11 @@ function testSpeech(textInput) {
 
   recognition.onspeechend = function() {
     recognition.stop();
+
+    indexTxt++;
+    if (indexTxt < messageTxt.length) {
+      speak();
+    }
   }
 
   recognition.onerror = function(event) {
@@ -79,9 +95,56 @@ function testSpeech(textInput) {
   }
 }
 
-emailInput.addEventListener('click', () => {
-  testSpeech(emailInput);
-});
-passwordInput.addEventListener('click', () => {
-  testSpeech(passwordInput);
-});
+// emailInput.addEventListener('click', () => {
+//   testSpeech(emailInput);
+// });
+// passwordInput.addEventListener('click', () => {
+//   testSpeech(passwordInput);
+// });
+
+function populateVoiceList() {
+  voices = synth.getVoices().sort(function (a, b) {
+      const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+      if ( aname < bname ) return -1;
+      else if ( aname == bname ) return 0;
+      else return +1;
+  });
+}
+
+populateVoiceList();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+
+function speak(){
+  if (synth.speaking) {
+      console.error('speechSynthesis.speaking');
+      return;
+  }
+  if (messageTxt[indexTxt] !== '') {
+    var utterThis = new SpeechSynthesisUtterance(messageTxt[indexTxt]);
+    utterThis.onend = function (event) {
+      testSpeech(allInput[indexTxt]);
+      console.log('SpeechSynthesisUtterance.onend');
+    }
+    utterThis.onerror = function (event) {
+        console.error('SpeechSynthesisUtterance.onerror');
+    }
+    var selectedOption = lang;
+    for(i = 0; i < voices.length ; i++) {
+      if(voices[i].lang === selectedOption) {
+        utterThis.voice = voices[i];
+        break;
+      }
+    }
+    utterThis.pitch = pitch;
+    utterThis.rate = rate;
+    synth.speak(utterThis);
+  }
+}
+
+document.body.onclick = function() {
+  if (indexTxt < messageTxt.length) {
+    speak();
+  }
+}
